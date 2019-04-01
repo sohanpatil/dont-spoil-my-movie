@@ -19,7 +19,7 @@
             ],
             "js": [
                 "jquery-3.0.0.min.js",
-                "spoiler.js"
+                "spoiler-util.js"
             ]
         }
     ]
