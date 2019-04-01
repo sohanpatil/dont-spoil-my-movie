@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "Don't Spoil My Movie!",
+    "description": "A Chrome Extension which will aid in blocking off spoiler filled posts over social media like Facebook, Reddit, etc",
+    "version": "0.0",
+    "browser_action": {
+        "default_icon": "assets/icon.jpg",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.facebook.com/*"
+            ],
+            "js": [
+                "jquery-3.0.0.min.js",
+                "spoiler.js"
+            ]
+        }
+    ]
+}
