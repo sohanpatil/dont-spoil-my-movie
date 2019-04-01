@@ -13,7 +13,7 @@ chrome.storage.sync.get("spoilerItem", function(results){
 
 function saveSpoilerList(){
     chrome.storage.sync.set({
-        'spoilerItem':tempSpoilerList["spoilerItem"]
+        'spoilerItem':tempSpoilerList['spoilerItem']
     }, function(result){
         if(chrome.runtime.error){
             console.log(chrome.runtime.error)
@@ -50,7 +50,7 @@ $(function(){
     //setting a spoiler item onClickListener
     $(document).on('click', '.spoilerListItem', function (item) {
         $('p:contains(' + item.currentTarget.innerHTML + ')').parents('.userContentWrapper').css('-webkit-filter', '');
-        spoilerList["spoilerItem"].splice($.inArray(item.currentTarget.innerHTML, spoilerList["spoilerItem"]), 1);
+        tempSpoilerList["spoilerItem"].splice($.inArray(item.currentTarget.innerHTML, tempSpoilerList["spoilerItem"]), 1);
         saveSpoilerList();
         updateListView();
         searchForSpoilers();
@@ -65,5 +65,30 @@ $(function(){
         subtree: true, // watches target and it's descendants
         attributes: true // watches targets attributes
     });
+
+    function updateListView(){
+        if(tempSpoilerList['spoilerItem'] != null){
+            console.log('temp splr is not nill');
+            console.log(tempSpoilerList[0]);
+            $('listView').empty();
+            var html = "<ul>";
+            for(var ctr =0; tempSpoilerList['spoilerItem'].length; ctr++){
+                html = html + '<li><a class="spoilerListItem" href="#">' + tempSpoilerList['spoilerItem'][i] + '</a></i>';
+            }
+            html = html + '</ul>';
+            $('#listView').append(html);
+        }
+    }
+
+    function searchForSpoilers(){
+        if(tempSpoilerList["spoilerItem"] != null){
+            var searchString = "";
+            tempSpoilerList["spoilerItem"].forEach(function(item){
+                searchString = searchString + "p:contains('"+item+"'),";
+            });
+            searchString = searchString.substring(0, searchString.length - 2);
+            $(searchString).parents('.userContentWrapper').css('-webkit-filter', 'blur(5px)');
+        }
+    }
 });
 
