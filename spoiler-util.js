@@ -13,12 +13,36 @@ chrome.storage.sync.get("spoilerItem", function(results){
 
 function saveSpoilerList(){
     chrome.storage.sync.set({
-        'spoilerItem':tempSpoilerList['spoilerItem']
+        'spoilerItem':tempSpoilerList["spoilerItem"]
     }, function(result){
         if(chrome.runtime.error){
             console.log(chrome.runtime.error)
         }
-    })
+    });
+}
+
+function updateListView(){
+    if(tempSpoilerList['spoilerItem'] != null){
+        console.log(tempSpoilerList);
+        $('#listView').empty();
+        var html = "<ul>";
+        for(var ctr =0; ctr< tempSpoilerList['spoilerItem'].length; ctr++){
+            html = html + '<li><a class="spoilerListItem collection-item" href="#">' + tempSpoilerList['spoilerItem'][ctr] + '</a></i>';
+        }
+        html = html + '</ul>';
+        $('#listView').append(html);
+    }
+}
+
+function searchForSpoilers(){
+    if(tempSpoilerList["spoilerItem"] != null){
+        var searchString = "";
+        tempSpoilerList["spoilerItem"].forEach(function(item){
+            searchString = searchString + "p:contains('"+item+"'), ";
+        });
+        searchString = searchString.substring(0, searchString.length - 2);
+        $(searchString).parents('.userContentWrapper').css('-webkit-filter', 'blur(5px)');
+    }
 }
 
 //page load actions
@@ -29,11 +53,16 @@ $(function(){
     //setting a submit button onClickListener
     $('#addButton').click(function(event){
         tempItemToAdd = $('#addItem').val().toLowerCase();
-        tempSpoilerList['spoilerItem'].push(tempItemToAdd);
-        saveSpoilerList();
-        $('#addItem').val('');
-        updateListView();
-        searchForSpoilers();
+        if(tempItemToAdd!=null && tempItemToAdd!=""){
+            tempSpoilerList['spoilerItem'].push(tempItemToAdd);
+            saveSpoilerList();
+            $('#addItem').val('');
+            updateListView();
+            searchForSpoilers();
+        }else{
+            //toast error
+            M.toast({html: "Input cannot be 'null'", classes: 'rounded'});
+        }
     });
 
     //setting a clear button onClickListener
@@ -47,6 +76,13 @@ $(function(){
         searchForSpoilers();
     });
 
+    $('#loadFromMovieService').click(function(event){
+        $('#addItem').val('');
+        updateListView();
+        searchForSpoilers();
+    });
+
+
     //setting a spoiler item onClickListener
     $(document).on('click', '.spoilerListItem', function (item) {
         $('p:contains(' + item.currentTarget.innerHTML + ')').parents('.userContentWrapper').css('-webkit-filter', '');
@@ -55,7 +91,7 @@ $(function(){
         updateListView();
         searchForSpoilers();
     });
-
+    
     //setting a MutationObserver to track spoilers even on DOM changes
     var observer = new MutationObserver(function(mutations, observer){
         searchForSpoilers();
@@ -65,29 +101,5 @@ $(function(){
         subtree: true, // watches target and it's descendants
         attributes: true // watches targets attributes
     });
-
-    function updateListView(){
-        if(tempSpoilerList['spoilerItem'] != null){
-            console.log(tempSpoilerList);
-            $('listView').empty();
-            var html = "<ul>";
-            for(var ctr =0; ctr< tempSpoilerList['spoilerItem'].length; ctr++){
-                html = html + '<li><a class="spoilerListItem" href="#">' + tempSpoilerList['spoilerItem'][i] + '</a></i>';
-            }
-            html = html + '</ul>';
-            $('#listView').append(html);
-        }
-    }
-
-    function searchForSpoilers(){
-        if(tempSpoilerList["spoilerItem"] != null){
-            var searchString = "";
-            tempSpoilerList["spoilerItem"].forEach(function(item){
-                searchString = searchString + "p:contains('"+item+"'),";
-            });
-            searchString = searchString.substring(0, searchString.length - 2);
-            $(searchString).parents('.userContentWrapper').css('-webkit-filter', 'blur(5px)');
-        }
-    }
 });
 

@@ -1,21 +1,83 @@
 <html>
-    <head>
-        <title>Don't Spoil My Movie!</title>
-        <style>
-                .search-found{
-                    text-decoration: underline
-                }        
-        </style>
-    </head>
-    <body>
-        <div id="addKeywordsForm">
-            <label>Input</label>
-            <input type="text" id="addItem" />
-            <input type="submit" id="addButton" value="add" />
+
+<head>
+    <title>Don't Spoil My Movie!</title>
+    <style>
+        body {
+            min-width: 500px;
+            /* your desired width */
+            max-width: 100%;
+            max-height: 100%;
+            height: 100px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .search-found {
+            text-decoration: underline
+        }
+
+        #listView {
+            height: 50px;
+            width: 100%;
+        }
+
+        #listView {
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+    <script src="jquery-3.0.0.min.js"></script>
+    <script src="spoiler-util.js"></script>
+
+    <!-- adding materializecss styling through CDN-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col s12 m6">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Enter Keywords Manually</span>
+                    <div id="addKeywordsForm">
+                        <form>
+                            <input type="text" id="addItem" type="submit" />
+                        </form>
+                    </div>
+                    <input class="btn" type="submit" id="addButton" value="Add" />
+                    <div id="listView"></div>
+                </div>
+                <div class="card-action">
+                    <input class="btn" type="submit" id="clearKeywords" value="Clear All" />
+                    <input class="btn" type="submit" id="loadFromMovieService" value="Use TMDB API" />
+                </div>
+            </div>
+            <p>
+                <h6><i>Clicking on the entries will remove them!</i></h6>
+            </p>
         </div>
-        <div id="listView"></div>
-        <input id="clearKeywords" type="submit" value="clear" />
-        <script src="spoiler-util.js"></script>
-        <script src="jquery-3.0.0.min.js"></script>
-    </body>
+    </div>
+</body>
+
 </html>
